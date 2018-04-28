@@ -30,7 +30,7 @@ class AZLandingViewController: UIViewController {
         super.viewDidLoad()
         
         let currentDate = AZUtility.getCurrentDayMonthYear()
-        self.currentDate.text = "\(currentDate.day)" + "/" + "\(currentDate.month)" + "/" + "\(currentDate.year)"
+        self.currentDate.text = "\(currentDate.month)" + "/" + "\(currentDate.day)" + "/" + "\(currentDate.year)"
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor.white
         title = "Prayer Timings"

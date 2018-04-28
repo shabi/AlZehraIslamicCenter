@@ -10,6 +10,7 @@ import Foundation
 
 enum DateFormat: String {
     case dateFormat = "MM/dd/yyyy"
+    case ddMMYYdateFormat = "dd/MM/yyyy"
     case monthYearFormat = "dd/yy"
     case dateTimeFormat = "yyyy-MM-dd HH:mm:ss"
     case dayMonthYearTimeFormat = "EEEE, MMMM d, yyyy"

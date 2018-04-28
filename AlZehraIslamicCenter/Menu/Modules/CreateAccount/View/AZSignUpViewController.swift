@@ -9,7 +9,7 @@
 import UIKit
 
 enum AmountType: String {
-    case none = "0"
+    case urChoice = "0"
     case fifty = "50"
     case sixty = "60"
 }
@@ -20,7 +20,7 @@ enum StateType: Int {
 }
 
 
-class AZSignUpViewController: UIViewController, PRGValidationFieldDelegate, PRGTextFieldDelegate {
+class AZSignUpViewController: UIViewController, PRGValidationFieldDelegate, PRGTextFieldDelegate, UITextFieldDelegate {
     
     @IBOutlet weak var nameField: PRGValidationField!
     @IBOutlet weak var surnameField: PRGValidationField!
@@ -31,12 +31,13 @@ class AZSignUpViewController: UIViewController, PRGValidationFieldDelegate, PRGT
     @IBOutlet weak var streetName: PRGValidationField!
     @IBOutlet weak var zipCode: PRGValidationField!
     @IBOutlet weak var cityName: PRGValidationField!
-    @IBOutlet weak var optionalContribution: PRGValidationField!
+    @IBOutlet weak var optionalContribution: UITextField!
     var stateName: String?
     
     @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var fiftyRupeesButton: UIButton!
     @IBOutlet weak var sixtyRuppesButton: UIButton!
+    @IBOutlet weak var optionalRuppesButton: UIButton!
     
     @IBOutlet weak var ncState: UIButton!
     @IBOutlet weak var scState: UIButton!
@@ -48,7 +49,7 @@ class AZSignUpViewController: UIViewController, PRGValidationFieldDelegate, PRGT
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        amountSelected = .none
+        amountSelected = .urChoice
         passwordField.otherPasswordField = confirmPasswordField
         
         nameField.delegate = self
@@ -61,9 +62,11 @@ class AZSignUpViewController: UIViewController, PRGValidationFieldDelegate, PRGT
         streetName.delegate = self
         zipCode.delegate = self
         cityName.delegate = self
-        optionalContribution.textFielddelegate = self
-        optionalContribution.valueField.keyboardType = .namePhonePad
+        optionalContribution.delegate = self
         self.createAccountViewModel = AZCreateAccountViewModel(viewController: self)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
+        self.view.addGestureRecognizer(tapGesture)
     }
 
     override func didReceiveMemoryWarning() {
@@ -71,6 +74,9 @@ class AZSignUpViewController: UIViewController, PRGValidationFieldDelegate, PRGT
         // Dispose of any resources that can be recreated.
     }
     
+    func dismissKeyboard (_ sender: UITapGestureRecognizer) {
+        optionalContribution.resignFirstResponder()
+    }
     
     var stateType: StateType = .nc {
         didSet {
@@ -85,11 +91,14 @@ class AZSignUpViewController: UIViewController, PRGValidationFieldDelegate, PRGT
         }
     }
     
-    var amountSelected: AmountType = .none {
+    var amountSelected: AmountType = .urChoice {
         didSet {
             switch amountSelected {
-            case .none:
+            case .urChoice:
+                let initialValue = optionalContribution.text
                 self.defaultAmountSetting()
+                self.optionalRuppesButton.setImage(UIImage(named: "SelectedRadio"), for: .normal)
+                optionalContribution.text = initialValue
             case .fifty:
                 self.defaultAmountSetting()
                 self.fiftyRupeesButton.setImage(UIImage(named: "SelectedRadio"), for: .normal)
@@ -104,7 +113,8 @@ class AZSignUpViewController: UIViewController, PRGValidationFieldDelegate, PRGT
     func defaultAmountSetting()  {
         self.fiftyRupeesButton.setImage(UIImage(named: "unSelectedRadio"), for: .normal)
         self.sixtyRuppesButton.setImage(UIImage(named: "unSelectedRadio"), for: .normal)
-        optionalContribution.valueField.text = "0"
+        self.optionalRuppesButton.setImage(UIImage(named: "unSelectedRadio"), for: .normal)
+        optionalContribution.text = "0"
         
     }
     
@@ -115,11 +125,12 @@ class AZSignUpViewController: UIViewController, PRGValidationFieldDelegate, PRGT
     
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.amountSelected = .none
+        self.amountSelected = .urChoice
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        self.amountSelected = .none
+        self.amountSelected = .urChoice
+        optionalContribution.text = textField.text
     }
     
     func PRGValidationField(_field: PRGValidationField, didValidateWithResult result: Bool, andErrorMessage errorMessage: String?) {
@@ -156,7 +167,7 @@ class AZSignUpViewController: UIViewController, PRGValidationFieldDelegate, PRGT
         self.resignFirstResponder()
         
         let amount: String?
-        if self.amountSelected == .none {
+        if self.amountSelected == .urChoice {
             amount = optionalContribution.text
         } else {
             amount = self.amountSelected.rawValue
@@ -176,11 +187,14 @@ class AZSignUpViewController: UIViewController, PRGValidationFieldDelegate, PRGT
     
     @IBAction func amountSelectedAction(_ sender: Any) {
         
-        if (sender as? UIButton)?.tag == 1 {
-            self.amountSelected = .sixty
-        } else {
+        if (sender as? UIButton)?.tag == 0 {
+            self.amountSelected = .urChoice
+        } else if (sender as? UIButton)?.tag == 1 {
             self.amountSelected = .fifty
+        } else if (sender as? UIButton)?.tag == 2 {
+            self.amountSelected = .sixty
         }
+        
         
     }
 }

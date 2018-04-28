@@ -133,8 +133,8 @@ class AZCreateEventViewController: UIViewController, PRGValidationFieldDelegate 
     
     
     @IBAction func selectEventDateAction(_ sender: UIButton) {
-        let min = Date().addingTimeInterval(-60 * 60 * 24 * 100)
-        let max = Date().addingTimeInterval(60 * 60 * 24 * 100)
+        let min = Date().addingTimeInterval(-60 * 60 * 24 * 365)
+        let max = Date().addingTimeInterval(60 * 60 * 24 * 365)
         let picker = DateTimePicker.show(selected: Date(), minimumDate: min, maximumDate: max)
         
         picker.highlightColor = UIColor(red: 255.0/255.0, green: 138.0/255.0, blue: 138.0/255.0, alpha: 1)

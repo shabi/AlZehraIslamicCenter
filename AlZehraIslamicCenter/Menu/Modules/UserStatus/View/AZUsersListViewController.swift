@@ -14,6 +14,8 @@ class AZUsersListViewController: UIViewController {
     
     @IBOutlet weak var userListCollectionView: UICollectionView!
     @IBOutlet weak var searchBarView: UISearchBar!
+    @IBOutlet weak var totalUsers: UILabel!
+    @IBOutlet weak var topConstraint: NSLayoutConstraint!
     var allUsers : [AZAllUserResponse]?
     var allUserViewModel: AZAllUserViewModel?
     var allUserList: [AZAllUserResponse]?
@@ -23,6 +25,13 @@ class AZUsersListViewController: UIViewController {
         super.viewDidLoad()
         self.allUserViewModel = AZAllUserViewModel(viewController: self)
         self.allUserViewModel?.fetchEventInfo()
+        
+        if UIDevice().userInterfaceIdiom == .phone && UIScreen.main.nativeBounds.height == 2436 {
+            //iPhone X
+            topConstraint.constant = 80.0
+        } else {
+            topConstraint.constant = 60.0
+        }
         setupUI()
         
     }
@@ -47,6 +56,7 @@ extension AZUsersListViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let allUser = self.allUserList {
+            totalUsers.text = String(allUser.count)
             return allUser.count
         }
         return 0

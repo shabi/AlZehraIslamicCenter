@@ -109,14 +109,14 @@ extension AZUserLandingScreenViewController: ViewController {
             self.fullName.text = info.fullName
             self.phoneNumber.text = String(describing: info.phoneNumber!)
             self.email.text = info.email
-            self.enrolledAmount.text = String(describing: info.enrolledAmount!)
-            if info.overdue! == 0 || info.overdue! < 0{
-                self.overdue.text = "You have no dues"
+            self.enrolledAmount.text = String(describing: info.enrolledAmount ?? 0)
+            let overdue = info.overdue ?? 0
+            if overdue < 0 {
+                self.overdue.text = String(describing: info.overdue ?? 0)
+                
             } else {
-                self.overdue.text = "You have past dues"
+                self.overdue.text = "You have no dues"
             }
-            
-//            self.overdue.text = String(describing: info.overdue!)
             self.memberId.text = String(describing: info.memberId!)
             self.address.text = info.address
         }
